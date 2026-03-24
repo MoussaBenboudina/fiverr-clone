@@ -1,7 +1,6 @@
 import express, { Router } from "express";
-// تغيير .ts إلى .js
-import protect from "../middleware/protect.js";
-import upload from "../utils/multer.js";
+import protect from "../middleware/protect.ts";
+import upload from "../utils/multer.ts";
 import {
   createGig,
   deleteGig,
@@ -9,10 +8,10 @@ import {
   getGig,
 } from "../controllers/gigController.js";
 
-// 1) router olusturma
+//1) router olusturma
 const router: Router = express.Router();
 
-// 2) yollari belirler
+//2)yollari belirler
 router
   .route("/")
   .get(getAllGigs)
@@ -24,8 +23,8 @@ router
     ]),
     createGig
   );
-
 router.route("/:id").get(getGig).delete(protect, deleteGig);
 
-// 3) router'i export et
+//3)router'i export et
+
 export default router;

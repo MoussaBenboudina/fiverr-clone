@@ -54,7 +54,7 @@ const Register = () => {
   const inputStyle = `
     w-full bg-gray-800/50 border border-gray-700 text-sm text-white rounded-xl p-3 outline-none 
     focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all 
-    placeholder:text-gray-500
+    placeholder:text-black
   `;
 
   return (
@@ -105,7 +105,7 @@ const Register = () => {
           {/* Seller */}
           <div className="p-6 rounded-2xl border border-gray-800">
             <div className="flex items-center gap-4 mb-4">
-              <Toggle setIsSeller={setIsSeller} color="#10B981" />
+              <Toggle setIsSeller={setIsSeller} color="#000" />
               <span className="text-sm font-bold">
                 Activate your seller account
               </span>
@@ -118,7 +118,7 @@ const Register = () => {
                   name="desc"
                   placeholder="Your description"
                   required
-                  className={`${inputStyle} col-span-3`}
+                  className={`${inputStyle} col-span-3 text-black`}
                 />
               </div>
             )}
