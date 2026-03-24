@@ -13,7 +13,6 @@ const Login = () => {
     login(user as unknown as ILoginUser);
   };
 
-  // نفس ستايل الـ inputs في صفحة Register لضمان التناسق
   const inputStyle = `
     w-full bg-gray-800/40 border border-gray-700 text-sm text-white rounded-xl p-3 outline-none 
     focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all 
@@ -22,7 +21,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#090b11] p-4 text-white font-sans">
-      {/* الخلفية المضيئة (Background Decor) */}
+  
       <div className="absolute inset-0 overflow-hidden -z-10">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/5 blur-[120px] rounded-full"></div>
       </div>
@@ -38,7 +37,7 @@ const Login = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
-          {/* Username */}
+       
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-white uppercase tracking-wider ml-1">
               Username
@@ -72,7 +71,7 @@ const Login = () => {
             />
           </div>
 
-          {/* Login Button */}
+       
           <div className="pt-2">
             <button 
               type="submit" 

@@ -3,10 +3,10 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import authRouter from "./routes/auth.js";
-import gigRouter from "./routes/gig.js"
-import reviewRouter from "./routes/review.js";
-import errorMiddleware from "./middleware/errorHandler.js";
+import authRouter from "./routes/auth.ts";
+import gigRouter from "./routes/gig.ts";
+import reviewRouter from "./routes/review.ts";
+import errorMiddleware from "./middleware/errorHandler.ts";
 
 //env dosyasindaki degiskenlere erisim saglayacak
 dotenv.config();

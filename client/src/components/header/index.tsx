@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom"; // أضفنا useLocation
+import { Link, useLocation } from "react-router-dom";
 import User from "./user";
 import { useContext, useState, useEffect } from "react";
 import AuthContext from "../../context/authContext";
@@ -9,11 +9,9 @@ const Header = () => {
   const { user, logout } = useContext(AuthContext);
   const [isScrolled, setIsScrolled] = useState(false);
   
-  // الحصول على المسار الحالي
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
-  // مراقبة التمرير
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -27,14 +25,11 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // تحديد الـ Classes بناءً على الصفحة وحالة التمرير
   const getHeaderStyles = () => {
-    // إذا لم يكن في الصفحة الرئيسية، اجعل الخلفية ثابتة دائماً
     if (!isHomePage) {
       return "bg-[#020617] border-b border-white/10 shadow-lg";
     }
     
-    // إذا كان في الصفحة الرئيسية، تعتمد الخلفية على التمرير
     return isScrolled 
       ? "bg-[#020617]/70 backdrop-blur-xl border-b border-white/10 shadow-lg"
       : "bg-transparent border-b border-transparent";
@@ -46,7 +41,7 @@ const Header = () => {
     >
       <div className="max-w-[1400px] mx-auto w-full relative flex justify-between items-center px-10 md:px-20">
         
-        {/* 1. الجانب الأيسر: الشعار */}
+        {/* Logo */}
         <div className="flex-shrink-0 z-10">
           <Link to="/" className="flex items-center">
             <div className="text-3xl font-black tracking-tighter text-white hover:text-emerald-500 transition-colors">
@@ -55,14 +50,15 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* 2. المنتصف: الروابط */}
+        {/* Navigation Links */}
         <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center justify-center">
           <Links />
         </div>
 
-        {/* 3. الجانب الأيمن: أزرار الدخول / المستخدم */}
+        {/* Auth Section */}
         <div className="flex items-center gap-4 z-10">
-          <div className="flex items-center gap-2 relative group">
+          {/* تم إزالة كلاس group من هنا لضمان استقلالية أزرار Login */}
+          <div className="flex items-center gap-2 relative">
             {user ? (
               <User data={user} logout={logout} />
             ) : (

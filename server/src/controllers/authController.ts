@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import bcrypt from 'bcrypt';
-import User, { IUser } from "../models/user.js";
+import bcrypt from "bcrypt";
+import User, { IUser } from "../models/user.ts";
 import jwt from "jsonwebtoken";
 
-import upload from "../utils/cloudinary.js";
+import upload from "../utils/cloudinary.ts";
 
 export const register = async (
   req: Request,

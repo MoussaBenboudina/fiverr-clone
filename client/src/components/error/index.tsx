@@ -6,7 +6,6 @@ type Props = {
 const Error = ({ error, refetch }: Props) => {
   return (
     <div className="flex flex-col items-center justify-center gap-4 text-center my-10 bg-[#1a1d23] border border-red-500/30 py-10 px-5 rounded-2xl text-gray-300 shadow-2xl">
-      {/* أيقونة تحذير بسيطة */}
       <div className="bg-red-500/10 p-3 rounded-full">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-red-500">
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />

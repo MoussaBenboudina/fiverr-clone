@@ -6,7 +6,6 @@ const CustomInput = ({ label, ...props }: any) => {
   return (
     <div className="relative w-full">
 
-      {/* Input */}
       <input
         {...props}
         onFocus={() => setFocus(true)}

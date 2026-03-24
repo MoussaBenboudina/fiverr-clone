@@ -24,7 +24,6 @@ const Links = () => {
             to={link.path}
             className="relative px-3 py-1 text-base font-semibold text-white hover:text-green-500 transition-colors duration-300"
           >
-            {/* underline متحرك */}
             <span className="relative z-10">{link.name}</span>
             {isActive && (
               <motion.div

@@ -1,7 +1,7 @@
 import express, { Router } from "express";
-import { login, logout, profile, register } from "../controllers/authController.js";
-import upload from "../utils/multer.js";
-import protect from "../middleware/protect.js";
+import { login, logout, profile, register } from "../controllers/authController.ts";
+import upload from "../utils/multer.ts";
+import protect from "../middleware/protect.ts";
 
 //1) router olusturma
 const router: Router = express.Router();

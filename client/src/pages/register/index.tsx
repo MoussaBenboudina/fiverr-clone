@@ -42,7 +42,7 @@ const Register = () => {
 
     const formData = new FormData(e.currentTarget);
 
-    // 👇 نضيف الولاية المختارة
+  
     formData.set("country", selectedWilaya);
 
     const newUser: any = Object.fromEntries(formData.entries());
@@ -54,7 +54,7 @@ const Register = () => {
   const inputStyle = `
     w-full bg-gray-800/50 border border-gray-700 text-sm text-white rounded-xl p-3 outline-none 
     focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all 
-    placeholder:text-black
+    placeholder:text-gray-300
   `;
 
   return (

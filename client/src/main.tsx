@@ -20,6 +20,11 @@ createRoot(document.getElementById("root")!).render(
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
-    <ToastContainer />
+  <ToastContainer 
+  theme="dark" 
+  position="top-right" 
+  autoClose={3000} 
+  pauseOnHover={false}
+/>
   </StrictMode>
 );

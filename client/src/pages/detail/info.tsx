@@ -10,9 +10,8 @@ type Props = {
 
 const Info = ({ gig }: Props) => {
   return (
-    <div className="flex flex-1 flex-col gap-8 max-w-4xl transition-colors duration-300">
-      
-      {/* 1. العنوان (Title Section) */}
+    <div className="flex flex-1 flex-col gap-8 max-w-4xl transition-colors duration-300 text-black">
+  
       <h1 className="font-extrabold text-2xl md:text-3xl text-zinc-900 dark:text-white leading-tight">
         {gig.title}
       </h1>
