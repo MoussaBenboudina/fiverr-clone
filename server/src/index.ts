@@ -11,22 +11,24 @@ import reviewRouter from "./routes/review.js";
 import errorMiddleware from "./middleware/errorHandler.js";
 
 dotenv.config();
-
 const app = express();
 
-// --- 1. إعدادات CORS (قبل أي route أو middleware آخر) ---
-const allowedOrigins = ["http://localhost:5173", process.env.CLIENT_URL].filter(Boolean) as string[];
+// ------------------- 1️⃣ إعدادات CORS -------------------
+const allowedOrigins = [
+  "http://localhost:5173",          // التطوير المحلي
+  process.env.CLIENT_URL            // رابط الfrontend على Vercel أو Render
+].filter(Boolean) as string[];
 
 app.use(
   cors({
-    origin: allowedOrigins,
-    credentials: true,
+    origin: allowedOrigins,          // السماح فقط بالأصول المحددة
+    credentials: true,               // للسماح بالكوكيز أو Authorization header
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
   })
 );
 
-// --- 2. الرد على طلبات Preflight (OPTIONS) لجميع المسارات ---
+// الرد على جميع طلبات Preflight (OPTIONS)
 app.options("*", cors({
   origin: allowedOrigins,
   credentials: true,
@@ -34,25 +36,25 @@ app.options("*", cors({
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
 }));
 
-// --- 3. Middlewares ---
+// ------------------- 2️⃣ Middlewares -------------------
 app.use(express.json());
 app.use(cookieParser());
 
-// --- 4. الاتصال بقاعدة البيانات ---
+// ------------------- 3️⃣ الاتصال بقاعدة البيانات -------------------
 mongoose
   .connect(process.env.DATABASE_URL as string)
   .then(() => console.log("🥳 DataBase connection success"))
   .catch((err) => console.log("😔 DataBase connection failed", err));
 
-// --- 5. Routes ---
+// ------------------- 4️⃣ Routes -------------------
 app.use("/api/auth", authRouter);
 app.use("/api/gigs", gigRouter);
 app.use("/api/reviews", reviewRouter);
 
-// --- 6. Error handling ---
+// ------------------- 5️⃣ Error handling -------------------
 app.use(errorMiddleware);
 
-// --- 7. تشغيل السيرفر ---
+// ------------------- 6️⃣ تشغيل السيرفر -------------------
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`🔥 Server running on port ${port} 🔥`);
