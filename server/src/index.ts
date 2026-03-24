@@ -25,12 +25,11 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-
 app.use(
   cors({
-    origin: true, // يقبل أي رابط
-    methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
-    credentials: true,
+    origin: ["http://localhost:5173", "https://your-frontend.vercel.app"], // رابط الـ frontend
+    credentials: true, // مهم جدًا إذا تستخدم الكوكيز أو Authorization header
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
