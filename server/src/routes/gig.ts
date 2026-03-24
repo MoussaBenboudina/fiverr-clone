@@ -1,6 +1,6 @@
 import express, { Router } from "express";
-import protect from "../middleware/protect.ts";
-import upload from "../utils/multer.ts";
+import protect from "../middleware/protect.js";
+import upload from "../utils/multer.js";
 import {
   createGig,
   deleteGig,
