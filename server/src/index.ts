@@ -1,4 +1,3 @@
-// index.ts
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -13,22 +12,28 @@ import errorMiddleware from "./middleware/errorHandler.js";
 dotenv.config();
 const app = express();
 
-// ------------------- 1️⃣ إعدادات CORS -------------------
+// ✅ CORS Configuration - يجب يكون قبل أي حاجة
 const allowedOrigins = [
-  "http://localhost:5173",          // التطوير المحلي
-  process.env.CLIENT_URL            // رابط الfrontend على Vercel أو Render
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://jobify-1-whmc.onrender.com",
+  process.env.CLIENT_URL,
 ].filter(Boolean) as string[];
 
+console.log("🔐 Allowed Origins:", allowedOrigins);
+
+// ✅ تطبيق CORS middleware
 app.use(
   cors({
-    origin: allowedOrigins,          // السماح فقط بالأصول المحددة
-    credentials: true,               // للسماح بالكوكيز أو Authorization header
+    origin: allowedOrigins,
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+    maxAge: 3600,
   })
 );
 
-// الرد على جميع طلبات Preflight (OPTIONS)
+// ✅ معالجة جميع preflight requests
 app.options("*", cors({
   origin: allowedOrigins,
   credentials: true,
@@ -36,25 +41,37 @@ app.options("*", cors({
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
 }));
 
-// ------------------- 2️⃣ Middlewares -------------------
+// ✅ Middleware إضافي (safety layer)
+app.use((req, res, next) => {
+  const origin = req.headers.origin as string;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization,X-Requested-With,Accept");
+  }
+  next();
+});
+
+// ------------------- Middlewares -------------------
 app.use(express.json());
 app.use(cookieParser());
 
-// ------------------- 3️⃣ الاتصال بقاعدة البيانات -------------------
+// ------------------- Database Connection -------------------
 mongoose
   .connect(process.env.DATABASE_URL as string)
   .then(() => console.log("🥳 DataBase connection success"))
   .catch((err) => console.log("😔 DataBase connection failed", err));
 
-// ------------------- 4️⃣ Routes -------------------
+// ------------------- Routes -------------------
 app.use("/api/auth", authRouter);
 app.use("/api/gigs", gigRouter);
 app.use("/api/reviews", reviewRouter);
 
-// ------------------- 5️⃣ Error handling -------------------
+// ------------------- Error Handling -------------------
 app.use(errorMiddleware);
 
-// ------------------- 6️⃣ تشغيل السيرفر -------------------
+// ------------------- Start Server -------------------
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`🔥 Server running on port ${port} 🔥`);
