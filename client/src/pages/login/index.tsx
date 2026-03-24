@@ -1,16 +1,45 @@
-import { FormEvent, useContext } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../context/authContext";
 import { ILoginUser } from "../../types";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+
+    // 1. تتبع استخراج البيانات من النموذج
+    console.log("🔍 [Step 1] Extracting Form Data...");
     const formData = new FormData(e.currentTarget);
     const user = Object.fromEntries(formData.entries());
-    login(user as unknown as ILoginUser);
+
+    console.log("📝 [Data Check]:", {
+      username: user.username || "MISSING",
+      password: user.password ? "********" : "MISSING"
+    });
+
+    try {
+      // 2. تتبع استدعاء الدالة في الـ Context
+      console.log("📡 [Step 2] Calling login() function from AuthContext...");
+      
+      // ملاحظة: تأكد أن دالة login في الـ Context هي async لتنتظر النتيجة هنا
+      await login(user as unknown as ILoginUser);
+      
+      console.log("✅ [Step 3] Login function executed successfully in Context");
+    } catch (err: any) {
+      // 3. صيد الخطأ في حال فشل الطلب قبل وصوله للسيرفر أو أثنائه
+      console.error("❌ [Step 3 - ERROR] Login failed at Frontend level:");
+      console.error("Error Message:", err.message);
+      if (err.response) {
+        console.error("Server Status:", err.response.status);
+        console.error("Server Data:", err.response.data);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputStyle = `
@@ -20,15 +49,15 @@ const Login = () => {
   `;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#090b11] p-4 text-white font-sans">
-  
+    <div className="min-h-screen flex items-center justify-center bg-[#090b11] p-4 text-white font-sans relative">
+      
+      {/* خلفية جمالية */}
       <div className="absolute inset-0 overflow-hidden -z-10">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/5 blur-[120px] rounded-full"></div>
       </div>
 
       <div className="w-full max-w-md bg-[#111827]/60 backdrop-blur-xl border border-gray-800 rounded-3xl p-8 shadow-2xl">
         
-        {/* Header */}
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
             Welcome Back
@@ -51,7 +80,6 @@ const Login = () => {
             />
           </div>
 
-          {/* Password */}
           <div className="space-y-2">
             <div className="flex justify-between items-center px-1">
               <label className="text-[11px] font-bold text-white uppercase tracking-wider">
@@ -71,17 +99,16 @@ const Login = () => {
             />
           </div>
 
-       
           <div className="pt-2">
             <button 
+              disabled={loading}
               type="submit" 
-              className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-[#090b11] font-extrabold rounded-xl shadow-lg transition-all active:scale-[0.98] uppercase tracking-widest text-sm"
+              className={`w-full py-3.5 ${loading ? 'bg-gray-600' : 'bg-emerald-500 hover:bg-emerald-400'} text-[#090b11] font-extrabold rounded-xl shadow-lg transition-all active:scale-[0.98] uppercase tracking-widest text-sm flex justify-center items-center`}
             >
-              Sign In
+              {loading ? "Authenticating..." : "Sign In"}
             </button>
           </div>
 
-          {/* Footer */}
           <p className="text-center text-sm text-gray-500 mt-6">
             New to Jobify? 
             <Link to="/register" className="text-emerald-400 font-bold ml-2 hover:text-emerald-300 transition-colors">
