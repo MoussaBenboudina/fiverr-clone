@@ -8,66 +8,81 @@ import gigRouter from "./routes/gig.ts";
 import reviewRouter from "./routes/review.ts";
 import errorMiddleware from "./middleware/errorHandler.ts";
 
-// تحميل متغيرات البيئة
 dotenv.config();
 
 const app = express();
 
-// --- 1. إعدادات الـ CORS المحدثة ---
+// --- CORS Configuration ---
 const allowedOrigins = [
-  "http://localhost:5173",                 // بيئة التطوير
-  "https://jobify-beta-eight.vercel.app"  // رابط الـ Frontend على Vercel
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://jobify-beta-eight.vercel.app"
 ];
 
+// تفعيل CORS قبل أي middleware آخر (مهم جداً!)
 app.use(
   cors({
     origin: (origin, callback) => {
-      // السماح بالطلبات بدون origin (مثل Postman) أو الموجودة في القائمة
+      // السماح بالطلبات بدون origin
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.warn(`❌ CORS Blocked: ${origin}`);
         callback(new Error("Not allowed by CORS policy"));
       }
     },
     methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"],
-    credentials: true, // ضروري لإرسال الـ Cookies والـ JWT
+    credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
+    maxAge: 86400, // 24 ساعة (تخزين الـ preflight)
   })
 );
 
-// استجابة مسبقة لطلبات OPTIONS (تحسن التوافق مع Vercel)
+// معالجة OPTIONS للـ Preflight
 app.options("*", cors());
 
-// --- 2. Middlewares الأساسية ---
-app.use(express.json());
+// --- Middlewares ---
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cookieParser());
 
-// --- 3. المسارات (Routes) ---
-// ملاحظة: تأكد أن الروابط في الـ Frontend تتبع هذا النمط تماماً
+// --- Health Check ---
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "🚀 Jobify Server is Running!",
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// --- Routes ---
 app.use("/api/auth", authRouter);
 app.use("/api/gigs", gigRouter);
 app.use("/api/reviews", reviewRouter);
 
-// مسار تجريبي للتأكد من أن السيرفر "حي" (Health Check)
-app.get("/", (req, res) => {
-  res.send("🚀 Jobify Server is Running Successfully!");
-});
-
-// --- 4. Middleware الأخطاء ---
+// --- Error Middleware ---
 app.use(errorMiddleware);
 
-// --- 5. الاتصال بقاعدة البيانات وتشغيل السيرفر ---
+// --- Database & Server ---
 const PORT = process.env.PORT || 5000;
+const DATABASE_URL = process.env.DATABASE_URL as string;
+
+if (!DATABASE_URL) {
+  console.error("❌ DATABASE_URL is not defined in .env");
+  process.exit(1);
+}
 
 mongoose
-  .connect(process.env.DATABASE_URL as string)
+  .connect(DATABASE_URL)
   .then(() => {
-    console.log("🥳🥳 Database connection success");
+    console.log("✅ Database connected successfully");
     app.listen(PORT, () => {
-      console.log(`🔥 Server is running on port ${PORT} 🔥`);
+      console.log(`🔥 Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
-    console.log("😔 Database connection failed", err);
-    process.exit(1); // إغلاق العملية في حال فشل الاتصال بالقاعدة
+    console.error("❌ Database connection failed:", err.message);
+    process.exit(1);
   });
+
+export default app;
