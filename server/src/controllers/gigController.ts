@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import Gig from "../models/gig.ts";
-import upload from "../utils/cloudinary.ts";
-import { ExtendedFiles, Filters, Query } from "../types/index.ts";
+import Gig from "../models/gig.js";
+import upload from "../utils/cloudinary.js";
+import { ExtendedFiles, Filters, Query } from "../types/index.js";
 
 //filtreleme secenekleri sunan fonksiyon
 const buildFilters = (query: Query): Filters => {
