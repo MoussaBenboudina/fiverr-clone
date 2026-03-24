@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://jobify-1-whmc.onrender.com/api", // حط الرابط مباشرة
+  baseURL: "https://jobify-1-whmc.onrender.com/api",
+  // --- السطر الناقص والجوهري ---
+  withCredentials: true, 
 });
 
 api.interceptors.request.use((config) => {
