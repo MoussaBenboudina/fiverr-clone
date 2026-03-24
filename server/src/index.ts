@@ -25,14 +25,12 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// إعدادات CORS المعدلة للإنتاج (Production)
+
 app.use(
   cors({
-    // يمكنك وضع ["http://localhost:5173", "رابط-موقعك-على-ريندر"]
-    // أو استخدم true للسماح بالرابط الذي يرسل الطلب حالياً (سهل للتجربة)
-    origin: process.env.CLIENT_URL || "http://localhost:5173", 
+    origin: true, // يقبل أي رابط
     methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
-    credentials: true, // ضرورية جداً للـ Cookies
+    credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
